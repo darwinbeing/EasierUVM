@@ -1,0 +1,2 @@
+cd generated_tb/sim
+vsimsa -do compile_riviera.do

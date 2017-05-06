@@ -1,0 +1,1 @@
+dut_top = mydut

@@ -1,0 +1,2 @@
+cd generated_tb/sim;
+vsim -c -do "do compile_questa.do; run -all"

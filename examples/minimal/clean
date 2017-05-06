@@ -1,0 +1,4 @@
+rm -r generated_tb
+rm -r generated_tb.bak
+rm *.log
+rm transcript

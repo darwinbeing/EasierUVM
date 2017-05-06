@@ -1,0 +1,20 @@
+!clkndata_if
+clk  clk
+data data
+
+!bus1_if
+bus1_clk  clk
+bus1_cmd  cmd
+bus1_addr addr
+bus1_data data
+
+!bus2_if
+bus2_clk  clk
+bus2_cmd  cmd
+bus2_addr addr
+bus2_data data
+
+!serial_if
+serial_clk  clk
+serial_in   data_in
+serial_out  data_out

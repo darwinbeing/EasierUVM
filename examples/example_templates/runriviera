@@ -1,0 +1,2 @@
+cd project/sim
+vsimsa -do compile_riviera.do

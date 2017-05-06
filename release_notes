@@ -1,0 +1,292 @@
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2017-01-19
+------------------------------------------------------
+
+Don't use the monitor's analysis port outside of the agent. Use the agent's analysis port instead.
+
+Move assignment to m_item in function <agent>_coverage::write
+
+Move lines around in generated code for top_default_sequence 
+
+Add an m_config member to every ${agent_name}_env_default_seq register sequence and assign before start
+Add an m_config member to every ${agent_name}_default_seq and assign before start
+Add an m_config member to every driver and monitor and assign in agent::connect
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-08-11
+------------------------------------------------------
+
+Allow multiple +uvm_cmdline settings to apply additively
+
+Don't generate an empty build_phase method for the monitor component
+
+Modify compile_riviera.do script to use the UVM 1.2 library supplied with Riviera
+
+Fix a serious bug - the default env sequence was not being started for an agent that accessed a register model
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-04-18
+------------------------------------------------------
+
+Add settings tb_prepend_to_initial and tb_inc_before_run_test to the common template file
+
+Add settings generate_interface_instance = no (interface instance not generated and vif not assigned) to the
+inteface template file to permit user-defined parameterized interface instantiations
+
+Allow user-defined interface instance names in the pinlist file for use with generate_interface_instance = no
+
+Add setting byo_interface (Bring Your Own interface) to the interface template file to allow user-supplied
+interfaces
+
+Changed "virtual interface is not set!" report from FATAL to WARNING - because a virtual interface might need to be
+null in the presence of a parameterized interface
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-04-06
+------------------------------------------------------
+
+Replace -f with -F in Riviera script
+
+Modify compile_riviera.do script to compile everything UVM with a single call to alog
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-04-01
+------------------------------------------------------
+
+Add a -s command line switch to override the syosil_scoreboard_src_path setting given in the common template file.
+This switch is for use when running the generator in EDA Playground.
+
+Permit end-of-line comments after DEC declarations in the pinlist file
+
+Fix a bug with trailing comments after the last port connection in the pinlist file
+
+Add calls to .set_item_context() before randomizing sequence objects to ensure random stability
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-02-19
+------------------------------------------------------
+
+Add settings that let you replace the auto-generated bus2reg and reg2bus methods:
+  adapter_generate_methods_inside_class
+  adapter_generate_methods_after_class
+  adapter_inc_before_class, 
+  adapter_inc_inside_class, 
+  adapter_inc_after_class, 
+
+Add setting nested_config_objects, which provides the option of having the agent config objects nested within 
+the top-level config object rather than being separate
+
+Add settings for use with nested configuration objects:
+  top_env_config_append_to_new
+  top_env_config_generate_methods_inside_class
+  top_env_config_generate_methods_after_class
+  agent_config_generate_methods_inside_class
+  agent_config_generate_methods_after_class
+  tb_generate_run_test
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-02-15
+------------------------------------------------------
+
+Fix bug in print_structure
+
+Add top_env_generate_run_phase
+
+Add generate_file_header and file_header_inc
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-01-21
+------------------------------------------------------
+
+Permit
+trans_var = // SystemVerilog comment
+and
+trans_meta = // SystemVerilog comment
+
+Insert the agent_copy_config_vars include file only once in the case where number_of_instances > 1
+This include file can copy the config vars for multiple instances of the configuration object
+
+Add the setting dual_top, which merely creates two top-level modules rather than instantiating the test harness below the test bench
+
+Add the setting split_transactors to support acceleration/emulation-ready environments
+The term transactor means a UVM driver or monitor. split_transactors does the following:
+- Forces dual_top
+- The test harness (the "HDL domain") that instantiates the DUT can be synthesized onto an accelerator or emulator
+- The test bench   (the "HVL domain") that instantiates the UVM environment must be untimed (no delays or clocks)
+- The HDL domain now instantiates BFMs (Bus-Functional Models) that contain the synthesizable parts of the transactors
+- The UVM drivers and monitors become proxies (wrappers) that make calls to the BFMs
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2016-01-05
+------------------------------------------------------
+
+Permit the / character in include filenames so that ./include can be structured into subdirectories
+
+Eliminated the <agent>_env directory and the <agent>_env_pkg. There is now only an <agent>_pkg.
+
+Use coverage_enable to condition the calling of sample(), not the instantiation of a subscriber for an agent
+
+Restructured the Perl script
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2015-11-30
+------------------------------------------------------
+
+Highlights
+----------
+
+- The Code Generator can be run from the EDA Playground website
+
+- The generator can instantiate the Syosil UVM Scoreboard along with reference models
+
+- Now supports transaction metadata that is part of the transaction class but is not included 
+in the generated do_compare, do_pack, and do_unpack methods
+
+- Now supports a single unpacked array dimension for transaction variables
+
+- Now supports a setting to pass arguments to the UVM command line processor
+
+
+The following changes are to support UVM 1.2
+--------------------------------------------
+
+Modify compile_vcs.do and compile_ius.do scripts to use the versions of UVM-1.2 built into those tools.
+(The Questasim script automatically picks up the built-in version of UVM-1.2)
+
+Replace the variable 'factory' with a call to uvm_factory::get() to support UVM 1.2
+
+
+The following changes are to support the code generator within EDA Playground (www.edaplayground.com)
+-----------------------------------------------------------------------------------------------------
+
+Add the following command line switches:
+  -x dut_source_path
+  -x inc_path
+  -x project
+  -x regmodel_file
+The presence of any one of these switches causes the script to return immediately with the value of 
+the corresponding setting. This feature is intended for use when running the script non-interactive mode.
+
+Make the -r command line switch entirely optional. The script will instantiate a register model anyway
+in the presence of the top_reg_block_type setting or a reg.tpl file
+
+Make the files.f file in the DUT directory optional. If absent, the script will create a files.f 
+that lists just the *.sv files in the DUT directory itself in alphabetical order.
+
+The dut_source_path setting is now optional and defaults to dut
+The inc_path setting is now optional and defaults to include
+The dut_pfile setting is now optional and defaults to pinlist
+
+
+Other enhancements
+------------------
+
+Add common template file settings to instantiate a reference model paired with the Syosil UVM Scoreboard,
+which must be downloaded separately from www.syosil.com
+
+The new settings are:
+  syosil_scoreboard_src_path
+  ref_model_input
+  ref_model_output
+  ref_model_compare_method
+  ref_model_inc_before_class
+  ref_model_inc_inside_class
+  ref_model_inc_after_class
+
+Generate do_pack and do_unpack methods in the class uvm_sequence_item.
+Add a command line switch -nopack to disable the generation of do_pack/do_unpack for backward compatibility
+Variables are packed in the order of the trans_var and trans_enum_var settings
+
+Add a trans_enum_var setting to distinguish enum variables.
+This is necessary when generating do_pack/do_unpack and is also used when generating convert2string
+
+Add trans_meta and trans_enum_meta settings to distinguish metadata from regular transaction variables.
+Metadata is excluded from the automatically generated do_compare, do_pack, and do_unpack methods
+The setting trans_enum_meta is only relevant to convert2string since metadata does not get packed
+typedefs can be given using trans_var or trans_meta, the two differing only in statement ordering.
+
+Allow a single unpacked static array dimension in the settings trans_var, trans_meta, trans_enum_var, and trans_enum_meta
+The dimension must be given as an expression [N], not as a range [N:M]
+The expression can include parameter names and operators
+trans_enum_var does not allow an unpacked dimension if do_pack/do_unpack are generated, otherwise it does
+trans_enum_meta allows an unpacked dimension because metadata is anyway excluded from do_pack/do_unpack
+Unpacked arrays are not included in the automatically generated transaction covergroup
+(One or more packed array dimensions are already supported)
+(Dynamic arrays are not supported)
+
+Call the method comparer.compare_field of the comparison policy object when overriding the do_compare
+method of class uvm_sequence_item in the generated code.
+
+Format the output from convert2string as enum or %p where appropriate, and otherwise as both %h and %d.
+
+Add a common template file setting top_default_seq_count which sets the repeat count for the top-level 
+default virtual sequence (instead of hacking this value in the generated code after running the script)
+
+Add a common template file setting uvm_cmdline which allows multiple command line arguments to be passed 
+to the UVM command line processor
+
+Move the position of certain occurrence of the _N suffix in the generated code for consistency,
+e.g. changed m_${agent}_agent${suffix} to m_${agent}${suffix}_agent
+
+
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2015-06-29
+------------------------------------------------------
+
+Add a switch -m <common-template-filename> to override the default filename common.tpl
+
+Add a setting prefix= to the common template file as an alternative to the -p switch (default is top)
+
+  The script could now be run as
+    perl easier_uvm_gen.pl <template> <template> ...
+  or
+    perl easier_uvm_gen.pl <template> <template> ... -m <common-template>
+
+
+Add the following settings to the interface template file for register access (replacing reg_access_name)
+  reg_access_mode
+  reg_access_map
+  reg_access_block_type
+  reg_access_block_instance
+  
+Add the following settings to the common template file for register access (replacing reg.tpl)
+  top_reg_block_type
+  regmodel_file
+  
+Make the register template file reg.tpl optional
+
+
+Add a setting top_env_generate_end_of_elaboration (default yes) to the common template file
+
+
+Revamp the messages printed from the easier_uvm_gen script to show the generated env/agent structure
+
+
+Add a compile/run script for Aldec Riviera Pro
+  
+
+------------------------------------------------------
+Release Notes for Easier UVM Code Generator 2015-06-21
+------------------------------------------------------
+
+Fix bug in gen_env which was repeating additional agent declaration in number_of_instances loop
+
+Fix version number
